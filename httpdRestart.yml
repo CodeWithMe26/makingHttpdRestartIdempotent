@@ -1,0 +1,23 @@
+ - hosts: 192.168.43.75
+   tasks: 
+     - name: installing httpd
+       package: 
+         name: "httpd"
+         state: "present"
+     - name: adding rule for defaukt port of httpd
+       firewalld: 
+         port: "80/tcp"
+         state: enabled
+         permanent: yes
+         immediate: yes
+     - name: coping test web page to document root
+       copy: 
+         src: /root/index.html
+         dest: /var/www/html/index.html
+       notify: restarting httpd server
+   handlers: 
+     - name: restarting httpd server
+       service: 
+         name: "httpd"
+         state: "restarted"
+      
